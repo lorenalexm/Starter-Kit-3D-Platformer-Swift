@@ -1,0 +1,11 @@
+[configuration]
+entry_symbol = "swift_entry_point"
+compatibility_minimum = 4.2
+
+
+[libraries]
+macos.debug = "res://bin/libPlatformer3D.dylib"
+
+
+[dependencies]
+macos.debug = {"res://bin/libSwiftGodot.dylib" : ""}

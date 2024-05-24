@@ -1,0 +1,50 @@
+name: Build and Distribute Dynamic Library
+
+on:
+  push:
+    branches:
+      - swift-build-action
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "source"
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Swift
+      uses: swift-actions/setup-swift@v2
+      with:
+        swift-version: '5.9'
+
+    - name: Build dynamic library
+      run: |
+        swift build -c release
+
+    - name: Create libraries directory
+      run: mkdir -p libraries
+
+    - name: Copy dynamic library
+      run: cp .build/release/libPlatformer3D.so libraries/
+
+    - name: Find and copy dependencies
+      run: |
+        for lib in $(ldd .build/release/libPlatformer3D.so | grep "=> /" | awk '{print $3}'); do
+          cp $lib libraries/
+        done
+
+    - name: Install zip
+      run: sudo apt-get install -y zip
+
+    - name: Create zip archive
+      run: zip -r libraries.zip libraries
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: dynamic-libraries
+        path: linux-build.zip

@@ -41,7 +41,7 @@ jobs:
       run: sudo apt-get install -y zip
 
     - name: Create zip archive
-      run: zip -r libraries.zip libraries
+      run: zip -r linux-build.zip libraries
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2

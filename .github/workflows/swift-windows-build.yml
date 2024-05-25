@@ -31,6 +31,7 @@ jobs:
       uses: compnerd/gha-setup-swift@main
       with:
         branch: swift-5.9-release
+        tag: 5.9-RELEASE
 
     - name: Build dynamic library
       run: |

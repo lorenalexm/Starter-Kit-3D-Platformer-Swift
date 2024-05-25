@@ -23,12 +23,13 @@ class CameraView: Node3D {
     #exportGroup("Rotation")
     @Export var rotationSpeed: Int = 120
     
-    @BindNode var Camera: Camera3D
+    var camera: Camera3D?
     
     // MARK: - Functions
     
     /// Called when the `Node3D` has been made ready in the scene.
     override func _ready() {
+        camera = getNode(path: "Camera") as? Camera3D
         cameraRotation = rotationDegrees
     }
     
@@ -36,13 +37,18 @@ class CameraView: Node3D {
     /// - Parameter delta: The time between the last frame and now.
     override func _physicsProcess(delta: Double) {
         guard let target else {
-            GD.pushError("Player does not hold a reference to the Target node!")
+            GD.pushError("CameraView does not hold a reference to the Target node!")
+            return
+        }
+        
+        guard let camera else {
+            GD.pushError("CameraView does not hold a reference to the Camera node!")
             return
         }
         
         position = position.lerp(to: target.position, weight: delta * 4)
         rotationDegrees = rotationDegrees.lerp(to: cameraRotation, weight: delta * 6)
-        Camera.position = Camera.position.lerp(to: Vector3(x: 0, y: 0, z: Float(zoom)), weight: delta * 8)
+        camera.position = camera.position.lerp(to: Vector3(x: 0, y: 0, z: Float(zoom)), weight: delta * 8)
     }
     
     /// Processes the input to rotate and zoom the `Camera`.

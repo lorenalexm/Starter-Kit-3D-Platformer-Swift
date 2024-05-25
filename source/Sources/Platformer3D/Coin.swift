@@ -13,13 +13,15 @@ class Coin: Area3D {
 	// MARK: - Properties
     var time = 0.0
 	var grabbed = false
-    @BindNode var Mesh: MeshInstance3D
-    @BindNode var Particles: CPUParticles3D
+    var mesh: MeshInstance3D?
+    var particles: CPUParticles3D?
 
 	// MARK: - Functions
     
     /// Called when the `Area3D` has been made ready in the scene.
     override func _ready() {
+        mesh = getNode(path: "Mesh") as? MeshInstance3D
+        particles = getNode(path: "Particles") as? CPUParticles3D
         self.bodyEntered.connect(onBodyEntered)
     }
     
@@ -44,10 +46,20 @@ class Coin: Area3D {
             return
         }
         
+        guard let mesh else {
+            GD.pushError("Coin is unable to find the Mesh!")
+            return
+        }
+        
+        guard let particles else {
+            GD.pushError("Coin is unable to find the Particles!")
+            return
+        }
+        
         player.collectCoin()
         audio.play("res://sounds/coin.ogg")
-        Mesh.queueFree()
-        Particles.emitting = false
+        mesh.queueFree()
+        particles.emitting = false
         grabbed = true
     }
 }

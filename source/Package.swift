@@ -14,7 +14,7 @@ let package = Package(
     ],
 	dependencies: [
         .package(url: "https://github.com/apple/swift-numerics", from: "1.0.0"),
-        .package(url: "https://github.com/migueldeicaza/SwiftGodot", branch: "main")
+        .package(url: "https://github.com/migueldeicaza/SwiftGodot", from: "0.42.0")
     ],
     targets: [
         .target(

@@ -28,16 +28,19 @@ class Player: CharacterBody3D {
     @Export var jumpStrength: Int = 7
     
     #exportGroup("Components")
-    @BindNode var Character: Node3D
+    var character: Node3D?
     
     #exportGroup("Properties")
-    @BindNode var ParticlesTrail: CPUParticles3D
-    @BindNode var SoundFootsteps: AudioStreamPlayer
+    var particlesTrail: CPUParticles3D?
+    var soundFootsteps: AudioStreamPlayer?
     
     // MARK: - Functions
     
     /// Called when the `CharacterBody3D` has been made ready in the scene.
     override func _ready() {
+        character = getNode(path: "Character") as? Node3D
+        particlesTrail = getNode(path: "ParticlesTrail") as? CPUParticles3D
+        soundFootsteps = getNode(path: "SoundFootsteps") as? AudioStreamPlayer
         animator = getNode(path: "Character/AnimationPlayer") as? AnimationPlayer
         audio = getTree()?.root?.getNode(path: "GlobalAudioPlayer") as? AudioPlayer
     }
@@ -63,7 +66,12 @@ class Player: CharacterBody3D {
             getTree()?.reloadCurrentScene()
         }
         
-        Character.scale = Character.scale.lerp(to: Vector3.one, weight: delta * 10)
+        guard let character else {
+            GD.pushError("Player is unable to find the Character!")
+            return
+        }
+        
+        character.scale = character.scale.lerp(to: Vector3.one, weight: delta * 10)
         
         if isOnFloor() && gravity > 2 && previouslyFloored == false {
             guard let audio else {
@@ -71,7 +79,7 @@ class Player: CharacterBody3D {
                 return
             }
             audio.play("res://sounds/jump.ogg")
-            Character.scale = Vector3(x: 1.25, y: 0.75, z: 1.25)
+            character.scale = Vector3(x: 1.25, y: 0.75, z: 1.25)
         }
         previouslyFloored = isOnFloor()
     }
@@ -127,14 +135,25 @@ class Player: CharacterBody3D {
             GD.pushError("Player does not hold a reference to the AnimationPlayer node!")
             return
         }
-        ParticlesTrail.emitting = false
-        SoundFootsteps.streamPaused = true
+        
+        guard let particlesTrail else {
+            GD.pushError("Player is unable to find the ParticlesTrail!")
+            return
+        }
+        
+        guard let soundFootsteps else {
+            GD.pushError("Player is unable to find the SoundFootsteps!")
+            return
+        }
+        
+        particlesTrail.emitting = false
+        soundFootsteps.streamPaused = true
         
         if isOnFloor() == true {
             if abs(velocity.x) > 1 || abs(velocity.z) > 1 {
                 animator.play(name: "walk", customBlend: 0.5)
-                ParticlesTrail.emitting = true
-                SoundFootsteps.streamPaused = false
+                particlesTrail.emitting = true
+                soundFootsteps.streamPaused = false
             } else {
                 animator.play(name: "idle", customBlend: 0.5)
             }
@@ -145,14 +164,18 @@ class Player: CharacterBody3D {
     
     /// Scales the `Character` and sets the gravity.
     func jump() {
+        guard let character else {
+            GD.pushError("Player is unable to find the Character!")
+            return
+        }
+        
         gravity = Double(-jumpStrength)
-        Character.scale = Vector3(x: 0.5, y: 1.5, z: 0.5)
+        character.scale = Vector3(x: 0.5, y: 1.5, z: 0.5)
     }
     
     /// Increments the number of coins and emits a collected signal.
     func collectCoin() {
         coins += 1
-        GD.print("Should be emitting a signal!")
         emit(signal: Player.coinCollected, coins)
     }
 }

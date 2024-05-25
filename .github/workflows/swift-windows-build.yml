@@ -1,4 +1,4 @@
-name: Build and Distribute Dynamic Library
+name: Build and Distribute Dynamic Library (Windows)
 
 on:
   push:

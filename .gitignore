@@ -2,6 +2,8 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,linux,swift,swiftpackagemanager,swiftpm,godot,visualstudiocode,xcode
 
 bin/*.dylib
+bin/*.so*
+bin/*.dll
 
 ### Godot ###
 # Godot 4+ specific ignores

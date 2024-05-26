@@ -16,20 +16,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Install Chocolatey
-      run: |
-        Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-      shell: powershell
-
-    - name: Install Visual Studio Build Tools
-      run: |
-        choco install visualstudio2019buildtools --package-parameters "--includeRecommended --includeOptional --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64" --no-progress
-      shell: cmd
-
-    - name: Set up PATH for Visual Studio
-      run: |
-        echo "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.28.29333\\bin\\Hostx64\\x64" >> $env:GITHUB_PATH
-
     - name: Set up Swift
       uses: compnerd/gha-setup-swift@main
       with:
@@ -45,20 +31,7 @@ jobs:
       run: New-Item -Path libraries -ItemType Directory
 
     - name: Copy dynamic library
-      run: Copy-Item .build\release\Platformer3D.dll libraries\
-
-    - name: Find and copy dependencies
-      run: |
-        # Use dumpbin to find the dependencies of your dynamic library
-        $dll = ".build\\release\\Platformer3D.dll"
-        $deps = & "dumpbin.exe" /DEPENDENTS $dll
-        $deps | Select-String -Pattern '\.dll' | ForEach-Object {
-          $dep = $_.Matches.Value.Trim()
-          if (Test-Path "C:\\Windows\\System32\\$dep") {
-            Copy-Item "C:\\Windows\\System32\\$dep" libraries\
-          }
-        }
-      shell: pwsh
+      run: Copy-Item .build\release\* libraries\
 
     - name: Create zip archive
       run: Compress-Archive -Path libraries\* -DestinationPath windows-build.zip

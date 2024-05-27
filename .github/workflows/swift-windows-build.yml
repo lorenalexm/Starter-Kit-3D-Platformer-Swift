@@ -7,7 +7,8 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    #runs-on: windows-latest
+    runs-on: self-hosted
     defaults:
       run:
         working-directory: "source"
@@ -31,7 +32,20 @@ jobs:
       run: New-Item -Path libraries -ItemType Directory
 
     - name: Copy dynamic library
-      run: Copy-Item .build\release\* libraries\
+      run: Copy-Item .build\release\*.dll libraries\
+
+    - name: Find and copy dependencies
+      run: |
+        # Use dumpbin to find the dependencies of your dynamic library
+        $dll = ".build\\release\\Platformer3D.dll"
+        $deps = & "dumpbin.exe" /DEPENDENTS $dll
+        $deps | Select-String -Pattern '\.dll' | ForEach-Object {
+          $dep = $_.Matches.Value.Trim()
+          if (Test-Path "C:\\Windows\\System32\\$dep") {
+            Copy-Item "C:\\Windows\\System32\\$dep" libraries\
+          }
+        }
+      shell: pwsh
 
     - name: Create zip archive
       run: Compress-Archive -Path libraries\* -DestinationPath windows-build.zip

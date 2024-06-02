@@ -3,7 +3,7 @@ name: Build and Distribute Dynamic Library (Linux)
 on:
   push:
     branches:
-      - swift-build-action
+      - "**"
 
 jobs:
   build:

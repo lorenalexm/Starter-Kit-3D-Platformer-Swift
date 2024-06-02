@@ -3,12 +3,11 @@ name: Build and Distribute Dynamic Library (Windows)
 on:
   push:
     branches:
-      - swift-build-action
+      - "**"
 
 jobs:
   build:
-    #runs-on: windows-latest
-    runs-on: self-hosted
+    runs-on: windows-latest
     defaults:
       run:
         working-directory: "source"
@@ -25,7 +24,6 @@ jobs:
 
     - name: Build dynamic library
       run: |
-        # Build your project (customize the command as per your project setup)
         swift build -c release
 
     - name: Create libraries directory
@@ -33,19 +31,6 @@ jobs:
 
     - name: Copy dynamic library
       run: Copy-Item .build\release\*.dll libraries\
-
-    - name: Find and copy dependencies
-      run: |
-        # Use dumpbin to find the dependencies of your dynamic library
-        $dll = ".build\\release\\Platformer3D.dll"
-        $deps = & "dumpbin.exe" /DEPENDENTS $dll
-        $deps | Select-String -Pattern '\.dll' | ForEach-Object {
-          $dep = $_.Matches.Value.Trim()
-          if (Test-Path "C:\\Windows\\System32\\$dep") {
-            Copy-Item "C:\\Windows\\System32\\$dep" libraries\
-          }
-        }
-      shell: pwsh
 
     - name: Create zip archive
       run: Compress-Archive -Path libraries\* -DestinationPath windows-build.zip

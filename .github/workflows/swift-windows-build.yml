@@ -1,0 +1,43 @@
+name: Build and Distribute Dynamic Library (Windows)
+
+on:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: "source"
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Swift
+      uses: compnerd/gha-setup-swift@main
+      with:
+        branch: swift-5.9.1-release
+        tag: 5.9.1-RELEASE
+
+    - name: Build dynamic library
+      run: |
+        swift build -c release
+
+    - name: Create libraries directory
+      run: New-Item -Path libraries -ItemType Directory
+
+    - name: Copy dynamic library
+      run: Copy-Item .build\release\*.dll libraries\
+
+    - name: Create zip archive
+      run: Compress-Archive -Path libraries\* -DestinationPath windows-build.zip
+      shell: pwsh
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: dynamic-libraries
+        path: ./source/windows-build.zip

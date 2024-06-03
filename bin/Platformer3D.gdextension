@@ -8,6 +8,8 @@ macos.debug = "res://bin/libPlatformer3D.dylib"
 macos.release = "res://bin/libPlatformer3D.dylib"
 linux.debug.x86_64 = "res://bin/libPlatformer3D.so"
 linux.release.x86_64 = "res://bin/libPlatformer3D.so"
+windows.debug.x86_64 = "res://bin/Platformer3D.dll"
+windows.release.x86_64 = "res://bin/Platformer3D.dll"
 
 
 [dependencies]
@@ -15,3 +17,5 @@ macos.release = {"res://bin/libSwiftGodot.dylib" : ""}
 macos.debug = {"res://bin/libSwiftGodot.dylib" : ""}
 linux.debug.x86_64 = {"res://bin/libSwiftGodot.so" : ""}
 linux.release.x86_64 = {"res://bin/libSwiftGodot.so" : ""}
+windows.debug.x86_64 = {"res://bin/SwiftGodot.dll" : ""}
+windows.release.x86_64 = {"res://bin/SwiftGodot.dll" : ""}

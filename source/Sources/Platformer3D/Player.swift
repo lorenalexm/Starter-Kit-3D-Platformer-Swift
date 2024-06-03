@@ -22,7 +22,7 @@ class Player: CharacterBody3D {
     var coins = 0
     var particlesTrail: CPUParticles3D?
     var soundFootsteps: AudioStreamPlayer?
-    @BindNodeDebug var Character: Node3D
+    @BindNodeDebug(withPath: "Character") var character: Node3D
     
     #signal("coinCollected", arguments: ["count": Int.self])
     
@@ -62,14 +62,7 @@ class Player: CharacterBody3D {
             getTree()?.reloadCurrentScene()
         }
         
-        /*
-        guard let character else {
-            GD.pushError("Player is unable to find the Character!")
-            return
-        }
-         */
-        
-        Character.scale = Character.scale.lerp(to: Vector3.one, weight: delta * 10)
+        character.scale = character.scale.lerp(to: Vector3.one, weight: delta * 10)
         
         if isOnFloor() && gravity > 2 && previouslyFloored == false {
             guard let audio else {
@@ -77,7 +70,7 @@ class Player: CharacterBody3D {
                 return
             }
             audio.play("res://sounds/jump.ogg")
-            Character.scale = Vector3(x: 1.25, y: 0.75, z: 1.25)
+            character.scale = Vector3(x: 1.25, y: 0.75, z: 1.25)
         }
         previouslyFloored = isOnFloor()
     }
@@ -162,15 +155,8 @@ class Player: CharacterBody3D {
     
     /// Scales the `Character` and sets the gravity.
     func jump() {
-        /*
-        guard let character else {
-            GD.pushError("Player is unable to find the Character!")
-            return
-        }
-         */
-        
         gravity = Double(-jumpStrength)
-        Character.scale = Vector3(x: 0.5, y: 1.5, z: 0.5)
+        character.scale = Vector3(x: 0.5, y: 1.5, z: 0.5)
     }
     
     /// Increments the number of coins and emits a collected signal.

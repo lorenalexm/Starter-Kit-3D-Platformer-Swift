@@ -13,7 +13,7 @@ import SwiftGodot
 /// For example:
 ///
 ///     class MyElements: CanvasLayer {
-///         @BindNode var GameOverLabel: Label
+///         @BindNode(withPath: "GameOverLabel") var gameOverLabel: Label
 ///     }
 ///
 ///
@@ -38,25 +38,9 @@ public struct BindNodeDebug<Value: Node> {
                 if let node = instance[keyPath: storageKeyPath].cachedNode {
                     return node as! Value
                 }
-
-                if !instance[keyPath: storageKeyPath].path.isEmpty {
-                    let nodePath = NodePath(from: instance[keyPath: storageKeyPath].path)
-                    instance[keyPath: storageKeyPath].cachedNode = instance.getNode(path: nodePath)
-                    return instance[keyPath: storageKeyPath].cachedNode as! Value
-                }
-
-                let name: String
-                let fullName = wrappedKeyPath.debugDescription
-                GD.pushWarning("BindNode DEBUG DESCRIPTION: \(fullName)")
-                if let namePos = fullName.lastIndex(of: ".") {
-                    name = String (fullName [fullName.index(namePos, offsetBy: 1)...])
-                } else {
-                    name = fullName
-                }
-                GD.pushWarning("BindNode fullName: \(fullName)")
-                let nodePath = NodePath(from: name)
-                GD.pushWarning("BindNode nodePath: \(nodePath)")
                 
+                let nodePath = NodePath(from: instance[keyPath: storageKeyPath].path)
+                GD.pushWarning("BindNodeDebug: nodePath is \(nodePath)")
                 instance[keyPath: storageKeyPath].cachedNode = instance.getNode(path: nodePath)
                 return instance[keyPath: storageKeyPath].cachedNode as! Value
             } else {
@@ -69,7 +53,7 @@ public struct BindNodeDebug<Value: Node> {
     }
     
     /// - Parameter path: An optional path to the node within the tree, if not provided, the name of the property is used.
-    public init (withPath path: String = "") { self.path = path }
+    public init (withPath path: String) { self.path = path }
     @available(*, unavailable, message: "This property wrapper can only be applied to classes")
     public var wrappedValue: Value {
         get {

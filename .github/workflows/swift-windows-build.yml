@@ -22,6 +22,9 @@ jobs:
         branch: swift-5.9.1-release
         tag: 5.9.1-RELEASE
 
+    - name: Install Dumpbin
+      uses: lorenalexm/install-dumpbin-action@main
+
     - name: Build dynamic library
       run: |
         swift build -c release
@@ -31,6 +34,19 @@ jobs:
 
     - name: Copy dynamic library
       run: Copy-Item .build\release\*.dll libraries\
+
+    - name: Find and copy dependencies
+      run: |
+        # Use dumpbin to find the dependencies of your dynamic library
+        $dll = ".build\\release\\Platformer3D.dll"
+        $deps = & "dumpbin.exe" /DEPENDENTS $dll
+        $deps | Select-String -Pattern '\.dll' | ForEach-Object {
+          $dep = $_.Matches.Value.Trim()
+          if (Test-Path "C:\\Program Files\\Swift\\runtime-development\\usr\\bin\\$dep") {
+            Copy-Item "C:\\Program Files\\Swift\\runtime-development\\usr\\bin\\$dep" libraries\
+          }
+        }
+      shell: pwsh
 
     - name: Create zip archive
       run: Compress-Archive -Path libraries\* -DestinationPath windows-build.zip

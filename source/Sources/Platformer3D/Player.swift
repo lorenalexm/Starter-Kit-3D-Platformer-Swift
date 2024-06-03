@@ -20,19 +20,15 @@ class Player: CharacterBody3D {
     var singleJump = true
     var doubleJump = true
     var coins = 0
+    var particlesTrail: CPUParticles3D?
+    var soundFootsteps: AudioStreamPlayer?
+    var character: Node3D?
     
     #signal("coinCollected", arguments: ["count": Int.self])
     
     @Export(.nodeType, "CameraView") var view: CameraView?
     @Export var movementSpeed: Double = 250
     @Export var jumpStrength: Int = 7
-    
-    #exportGroup("Components")
-    var character: Node3D?
-    
-    #exportGroup("Properties")
-    var particlesTrail: CPUParticles3D?
-    var soundFootsteps: AudioStreamPlayer?
     
     // MARK: - Functions
     

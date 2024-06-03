@@ -13,6 +13,7 @@ class CameraView: Node3D {
     // MARK: - Properties
     var cameraRotation = Vector3.zero
     var zoom = 10.0
+    var camera: Camera3D?
     
     #exportGroup("Properties")
     @Export(.nodeType, "Player") var target: Player?
@@ -22,8 +23,6 @@ class CameraView: Node3D {
     @Export var zoomSpeed: Int = 10
     #exportGroup("Rotation")
     @Export var rotationSpeed: Int = 120
-    
-    var camera: Camera3D?
     
     // MARK: - Functions
     

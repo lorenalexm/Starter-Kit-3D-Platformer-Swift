@@ -1,0 +1,21 @@
+[configuration]
+entry_symbol = "swift_entry_point"
+compatibility_minimum = 4.2
+
+
+[libraries]
+macos.debug = "res://source/.build/arm64-apple-macosx/debug/libPlatformer3D.dylib"
+macos.release = "res://source/.build/arm64-apple-macosx/release/libPlatformer3D.dylib"
+linux.debug.x86_64 = "res://source/.build/x86_64-unknown-linux-gnu/debug/libPlatformer3D.so"
+linux.release.x86_64 = "res://source/.build/x86_64-unknown-linux-gnu/release/libPlatformer3D.so"
+windows.debug.x86_64 = "res://source/.build/windows/debug/Platformer3D.dll"
+windows.release.x86_64 = "res://source/.build/windows/release/Platformer3D.dll"
+
+
+[dependencies]
+macos.release = {"res://source/.build/arm64-apple-macosx/release/libSwiftGodot.dylib" : ""}
+macos.debug = {"res://source/.build/arm64-apple-macosx/debug/libSwiftGodot.dylib" : ""}
+linux.debug.x86_64 = {"res://source/.build/x86_64-unknown-linux-gnu/debug/libSwiftGodot.so" : ""}
+linux.release.x86_64 = {"res://source/.build/x86_64-unknown-linux-gnu/release/libSwiftGodot.so" : ""}
+windows.debug.x86_64 = {"res://source/.build/windows/debug/SwiftGodot.dll" : ""}
+windows.release.x86_64 = {"res://source/.build/windows/release/SwiftGodot.dll" : ""}

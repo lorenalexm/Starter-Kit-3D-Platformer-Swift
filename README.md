@@ -18,13 +18,8 @@ To get started with this project, follow these steps:
 
 1. Navigate to the ___source___ directory in your terminal.
 2. Run the command `swift build` to build the project.
-3. After the build is complete, locate the dynamic libraries:
-   - `libPlatformer3D.dylib`
-   - `libSwiftGodot.dylib`
-4. Copy these libraries to the ___bin___ directory located in the root of the project.
-5. Once the libraries are copied, you can open the project in Godot.
 
-Now you're ready to explore the code and run the game!
+The gdextension is configured to load the files from the output folder of swift build (Not tested in windows), Now you're ready to explore the code and run the game!
 
 ## Credits
 

@@ -44,7 +44,7 @@ jobs:
       run: zip -r ~/linux-build.zip libraries
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: dynamic-libraries
         path: ~/linux-build.zip
